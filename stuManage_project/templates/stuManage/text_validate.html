@@ -1,0 +1,178 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>学生管理系统后台登录</title>
+		<link rel="stylesheet" href="{% static '/stuManage/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static '/stuManage/css/common.css' %}" />
+		<link rel="stylesheet" href="{% static 'stuManage/css/login.css' %}" />
+	</head>
+	<body>
+		<div class="main">
+			<div class="login-box">
+				<h1>学生管理系统</h1>
+				<h2><span>后台登录</span></h2>
+				<form method="post" id="loginValidate">
+                    {% csrf_token %}
+					<div>
+						<input class="form-control" type="text" id="username" name="username" placeholder="请输入账号" />
+					    <div id="username-error"></div>
+                    </div>
+					<div>
+						<input class="form-control" type="password" id="password" name="password" placeholder="请输入密码" />
+					    <div id="password-error"></div>
+                    </div>
+					<div class="yzm-div">
+						<input class="form-control yzm" type="text" id="verifycode" name="verifycode" placeholder="请输入验证码" />
+{#						<input class="form-control yzmpic" type="text" name="verifycode" placeholder="请输入验证码" />#}
+                        <img id="verifycodeImg" src="{% url 'stuManage:showverify' %}" class="yzmpic" title="点击更换">
+
+                    </div>
+                    <div id="verifycode-error"></div>
+					<div>
+						<span id="result"></span>
+					</div>
+					<div>
+						<a class="btn btn-default form-control" id="btn-login" >登 录</a><!--href="index.html"-->
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<footer class="footer">
+			<div>Copyright © 1999-2018, Alex.NET, All Rights Reserved</div>
+		</footer>
+	</body>
+</html>
+<script type="text/javascript" src="{% static '/stuManage/js/jquery-1.10.2.min.js' %}" ></script>
+<script type="text/javascript" src="{% static '/stuManage/js/bootstrap.min.js' %}" ></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#verifycodeImg').click(function() {
+            $('#verifycodeImg').attr('src',$('#verifycodeImg').attr('src')+'?'+Math.random())
+        });
+
+        $('#username').focus(function () {
+            validateLength($('#username-error'), $('#username').val().trim().length)
+        });
+        $('#username').blur(function () {
+            validateLength($('#username-error'), $('#username').val().trim().length)
+        });
+        $('#password').focus(function () {
+            validateLength($('#password-error'), $('#password').val().trim().length)
+        });
+        $('#password').blur(function () {
+            validateLength($('#password-error'), $('#password').val().trim().length)
+        });
+        $('#verifycode').focus(function () {
+            validateLength($('#verifycode-error'), $('#verifycode').val().trim().length)
+        });
+        $('#verifycode').blur(function () {
+            validateLength($('#verifycode-error'), $('#verifycode').val().trim().length)
+        });
+
+        function validateLength  (element, length) {
+            if(length < 4){
+                {#alert(element.val())#}
+                $(element.text('账户长度不能少于4位'));
+            }else {
+                $(element.text(''));
+            }
+        }
+
+        $('#btn-login').click(function (e) {
+            alert(1111)
+            {#$('#loginValidate').bootstrapValidator('validate');#}
+            {#if($('#loginValidate').data('bootstrapValidator').isValid()){#}
+
+
+
+                alert(22222)
+                var username = $('#username').val().trim();
+                var password = $('#password').val().trim();
+                var verifycode = $('#verifycode').val().trim();
+                var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val()
+
+                $.ajax({
+                    url : '{% url 'stuManage:userLogin' %}',
+                    data: {'username': username, 'password':password, 'verifycode':verifycode, 'csrfmiddlewaretoken': csrfmiddlewaretoken},
+                    type:'POST',
+                    dataType:'text',
+                    success:function(data){
+                        {#alert(data)#}
+                        if (data == 'ok'){
+                            window.parent.location.href='{% url 'stuManage:index' %}';
+                        }else if(data == 'false'){
+                            $('#result').text('用户名或密码错误');
+                        }else {
+                            $('#result').text(data);
+                        }
+                    },
+                    error:function (textStutus) {
+                        $('#result').html(textStutus);
+                    }
+                });
+             {# }#}
+            e.preventDefault();
+        });
+    });
+</script>
+<script type="text/javascript">
+    {#$(function () {#}
+    {#   $('#loginValidate').bootstrapValidator({#}
+    {#        message: 'This value is not valid',#}
+    {#        feedbackIcons: {#}
+    {#            valid: 'glyphicon glyphicon-ok',#}
+    {#            invalid: 'glyphicon glyphicon-remove',#}
+    {#            validating: 'glyphicon glyphicon-refresh'#}
+    {#        },#}
+    {#        fields: {#}
+    {#            username: {#}
+    {#                validators: {#}
+    {#                    notEmpty: {#}
+    {#                        message: '账户不能为空'#}
+    {#                    },#}
+    {#                    stringLength: {#}
+    {#                        min: 4,#}
+    {#                        max: 12,#}
+    {#                        message: '账户长度大于4位且小于12位'#}
+    {#                    },#}
+    {#                }#}
+    {#            },#}
+    {#            password: {#}
+    {#                validators: {#}
+    {#                    notEmpty: {#}
+    {#                        message: '密码不能为空'#}
+    {#                    },#}
+    {#                    stringLength: {#}
+    {#                        min: 6,#}
+    {#                        message: '密码长度大于6位'#}
+    {#                    },#}
+    {#                }#}
+    {#            },#}
+    {#            verifycode: {#}
+    {#                validators: {#}
+    {#                    notEmpty: {#}
+    {#                        message: '验证码不能为空'#}
+    {#                    },#}
+                        {#remote: {  //ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}#}
+                        {#     url: "{% url 'stuManage:verifyvalidate' %}", //验证地址#}
+                        {#     message: '验证码错误', //提示消息#}
+                        {#     delay :  1000, //每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）#}
+                        {#     type: 'POST', //请求方式#}
+                        {#     data: {#}
+                        {#        verifycode: function () {#}
+                        {#            return $("#verifycode").val();#}
+                        {#        },#}
+                        {#        csrfmiddlewaretoken: function () {#}
+                        {#            return $('[name="csrfmiddlewaretoken"]').val();#}
+                        {#        }#}
+                        {#     }#}
+                        {# }#}
+    {#                }#}
+    {#             }#}
+    {#        }#}
+    {#    });#}
+    {# });#}
+</script>

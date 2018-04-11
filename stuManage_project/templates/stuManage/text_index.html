@@ -1,0 +1,96 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>后台首页</title>
+		<link rel="stylesheet" href="{% static '/stuManage/css/bootstrap.min.css' %}" />
+		<link rel="stylesheet" href="{% static '/stuManage/css/common.css' %}" />
+		<link rel="stylesheet" href="{% static '/stuManage/css/index.css' %}" />
+	</head>
+	<body>
+		<header class="header">
+			<nav class="navbar navbar-default header-nav">
+			  	<div class="container-fluid">
+				    <!-- Brand and toggle get grouped for better mobile display -->
+				    <div class="navbar-header">
+				      	<a class="navbar-brand" href="{% url 'stuManage:index' %}">学生管理系统</a>
+				    </div>
+
+				    <!-- Collect the nav links, forms, and other content for toggling -->
+				    <div class="collapse navbar-collapse" id="nav-menu">
+				      	<ul class="nav navbar-nav navbar-right">
+					        <li><a href="{% url 'stuManage:uerLogout' %}">退出</a></li>
+					        <!--<li class="dropdown">
+					          	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+					          	<ul class="dropdown-menu">
+						            <li><a href="#">Action</a></li>
+						            <li><a href="#">Another action</a></li>
+						            <li><a href="#">Something else here</a></li>
+						            <li role="separator" class="divider"></li>
+						            <li><a href="#">Separated link</a></li>
+					          	</ul>
+					        </li>-->
+				      	</ul>
+				    </div><!-- /.navbar-collapse -->
+			  	</div><!-- /.container-fluid -->
+			</nav>
+		</header>
+		<div class="clearfix"></div>
+
+		<div class="main container-fluid">
+			<div class="row">
+				<div class="col-md-2 col-sm-2 col-xs-2 main-left ">
+					<div class="userinfo">
+						<div>
+							<img src="{% static '/stuManage/img/1.jpg' %}">
+							<div class="username">
+                                <span>ID: {{ user.ad_name }}</span>
+                            </div>
+                            <div class="username">
+                                <span>昵称: {{ user.ad_name }}</span>
+                            </div>
+						</div>
+					</div>
+					<ul>
+						<li>学生管理</li>
+						<li>收费管理</li>
+						<li>住宿管理</li>
+					</ul>
+				</div>
+
+				<div class="col-md-10 col-sm-10 col-xs-10 main-right ">
+					<div class="showtime">今天是 2018 年 4 月 7 日 10:27 星期六</div>
+					<h1>欢迎使用学生管理系统</h1>
+					<div class="stu-div">
+						<h2><span>学生管理</span></h2>
+                        <div><a href="{% url 'stuManage:students' %}" >学生列表</a></div>
+                        <div><a href="{% url 'stuManage:addstu' %}" >新增学生</a></div>
+                        <div><a href="{% url 'stuManage:importstu' %}" >导入学生</a></div>
+					</div>
+					<div class="fee-div">
+						<h2><span>收费管理</span></h2>
+						<div>学费</div>
+						<div>住宿费</div>
+						<div>保险</div>
+						<div>其他</div>
+						<div>汇总统计</div>
+					</div>
+					<div class="stay-div">
+						<h2><span>住宿管理</span></h2>
+						<div>安排住宿</div>
+						<div>转出转入</div>
+						<div>汇总统计</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+
+		<footer class="footer">
+			<div>Copyright © 1999-2018, Alex.NET, All Rights Reserved</div>
+		</footer>
+	</body>
+</html>
+<script type="text/javascript" src="{% static '/stuManage/js/jquery-3.3.1.min.js' %}" ></script>
+<script type="text/javascript" src="{% static '/stuManage/js/bootstrap.min.js' %}" ></script>

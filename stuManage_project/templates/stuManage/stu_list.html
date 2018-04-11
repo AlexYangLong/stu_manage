@@ -1,0 +1,89 @@
+{% extends 'stuManage/base.html' %}
+{% load static from staticfiles %}
+
+{% block title %}
+    <title>学生管理-学生列表</title>
+{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'stuManage/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'stuManage/css/common.css' %}" />
+    <link rel="stylesheet" href="{% static 'stuManage/css/student.css' %}" />
+{% endblock css %}
+
+{% block main-right %}
+    <div class="showtime">今天是 2018 年 4 月 7 日 10:27 星期六</div>
+    <div class="list-top">首页 > 学生管理 > 学生列表</div>
+    <div class="top-btn">
+        <button class="btn btn-default" id="btn-addstu">新增</button>
+        <button class="btn btn-default" id="btn-import">批量导入</button>
+        <form class="form-inline pull-right" method="post">
+            <input type="text" class="form-control" id="search-key" />
+            <button class="btn btn-default" id="btn-search">搜索</button>
+        </form>
+    </div>
+    <table class="table table-hover">
+        <tr>
+            <td>学号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>身份证号</td>
+            <td>住址</td>
+            <td>父母联系电话</td>
+            <td>操作</td>
+        </tr>
+        {% for stu in pageStuList %}
+            <tr>
+                <td>{{ stu.s_number }}</td>
+                <td>{{ stu.s_name }}</td>
+                <td>{{ stu.s_gender }}</td>
+                <td>{{ stu.s_idnumber }}</td>
+                <td>{{ stu.s_address }}</td>
+                <td>{{ stu.s_phone }}</td>
+                <td><a href="{% url 'stuManage:editstu' stu.id %}">编辑</a> 删除</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <ul class="pagination pull-right" id="pageList">
+        {{ pageListHTML|safe }}
+{#        <li>#}
+{#            <a href="#" aria-label="Previous">#}
+{#                <span aria-hidden="true">&laquo;</span>#}
+{#            </a>#}
+{#        </li>#}
+{#        <li class="active"><a href="#">1</a></li>#}
+{#        <li><a href="#">2</a></li>#}
+{#        <li><a href="#">3</a></li>#}
+{#        <li><a href="#">4</a></li>#}
+{#        <li><a href="#">5</a></li>#}
+{#        <li>#}
+{#            <a href="#" aria-label="Next">#}
+{#                <span aria-hidden="true">&raquo;</span>#}
+{#            </a>#}
+{#        </li>#}
+    </ul>
+{% endblock main-right %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'stuManage/js/jquery-3.3.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'stuManage/js/bootstrap.min.js' %}" ></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {#if {{ pageStuList.paginator.page_range[-1] }}#}
+
+            $('#btn-addstu').click(function (e) {
+                window.parent.location.href = "{% url 'stuManage:addstu' %}";
+                e.preventDefault();
+            });
+            $('#btn-import').click(function (e) {
+                window.parent.location.href = "{% url 'stuManage:importstu' %}";
+                e.preventDefault();
+            });
+            $('#btn-search').click(function (e) {
+                var search_key = $('#search-key').val();
+                alert(search_key)
+                window.parent.location.href = "{% url 'stuManage:stuList' 1 %}?kw=" + search_key;
+                e.preventDefault();
+            });
+        });
+    </script>
+{% endblock script %}

@@ -1,0 +1,97 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+
+
+/************************header部分***************************/
+.header{
+	height: 80px;
+}
+.navbar-default{
+	background-color: #006699;
+}
+.header .navbar,.navbar-brand{
+	height: 80px;
+	margin: 0;
+}
+.navbar-brand{
+	font-size: 24px;
+}
+.header .navbar .navbar-brand{
+	line-height: 80px;
+	margin: 0 15px;
+	padding: 0 15px;
+	color: white;
+}
+.header .navbar .navbar-right>li>a{
+	line-height: 80px;
+	margin: 0 15px;
+	padding: 0 15px;
+	color: white;
+}
+
+/*********************main-left部分、main-right************************/
+.main{
+	/*padding: 0px 15px;*/
+	min-height: 500px;
+}
+.main-left .userinfo{
+	padding: 20px 0px;
+	/*background-color: blue;*/
+	border-bottom: 1px solid #6699FF;
+}
+.main-left .userinfo div{
+	text-align: center;
+	/*min-height: 100px;*/
+}
+.userinfo .img{
+	text-align: center;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+}
+.userinfo .username{
+	margin-top: 10px;
+}
+.main-left ul{
+	/*margin-top: 20px;*/
+	text-align: center;
+	list-style: none;
+}
+.main-left ul>li>a{
+	/*padding-left: 30px;*/
+	display: block;
+	font-size: 18px;
+	height: 50px;
+	line-height: 50px;
+	cursor: pointer;
+	color: #333;
+	border-bottom: 1px solid #6699FF;
+}
+.main-left ul>li>a:hover{
+	text-decoration: none;
+	background-color: #6699FF;
+	color: white;
+}
+
+.main-right{
+	float: left;	
+}
+.main-right .showtime{
+	margin-top: 20px;
+}
+
+/********************footer部分********************/
+.footer{
+	margin-top: 20px;
+	border-top: 1px solid #CCC;
+	padding: 20px 0px;
+}
+.footer div{
+	color: #333;
+	/*margin: auto 0;*/
+	text-align: center;
+}
+

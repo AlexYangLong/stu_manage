@@ -1,0 +1,95 @@
+{% extends 'stuManage/base.html' %}
+{% load static from staticfiles %}
+
+{% block title %}
+    <title>学生管理-批量导入学生</title>
+{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'stuManage/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'stuManage/css/common.css' %}" />
+    <link rel="stylesheet" href="{% static 'stuManage/css/student.css' %}" />
+{% endblock css %}
+
+{% block main-right %}
+    <div class="showtime">今天是 2018 年 4 月 7 日 10:27 星期六</div>
+    <div class="list-top">首页 > 学生管理 > 批量导入</div>
+    <div class="top-btn">
+        <button class="btn btn-default" id="btn-golist">返回列表</button>
+        <button class="btn btn-default" id="btn-addstu">新增</button>
+        <!--<form class="form-inline pull-right" method="post" action="">
+            <input type="text" class="form-control" />
+            <button class="btn btn-default">搜索</button>
+        </form>-->
+    </div>
+    <div class="user-add">
+        <form class="form-horizontal" method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="stu_number" class="col-sm-2 col-xs-2 control-label">导入文件：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="file" class="form-control" id="stu_list_file" name="stu_list_file">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-xs-2 control-label"></label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <button class="btn btn-default" id="btn-execute">执 行</button>
+                    <button type="reset" class="btn btn-default">重 置</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_phone" class="col-sm-2 col-xs-2 control-label"></label>
+                <div id="result" class="col-sm-5 col-md-5 col-xs-5">
+{#                    <span>1111</span>#}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock main-right %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'stuManage/js/jquery-3.3.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'stuManage/js/bootstrap.min.js' %}" ></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#btn-addstu').click(function (e) {
+                window.parent.location.href = "{% url 'stuManage:addstu' %}";
+                e.preventDefault();
+            });
+            $('#btn-golist').click(function (e) {
+                window.parent.location.href = "{% url 'stuManage:stuList' 1 %}";
+                e.preventDefault();
+            });
+
+            $('#btn-execute').click(function (e) {
+                var stuFile = $('#stu_list_file')[0].files[0];
+                var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+                {#alert(stuFile);#}
+                var form = new FormData();
+                form.append('stufile', stuFile);
+                form.append('csrfmiddlewaretoken', csrfmiddlewaretoken);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'stuManage:importStu' %}",
+                    data: form,
+                    processData: false, // 告诉jquery要传输data对象
+                    contentType: false,   // 告诉jquery不需要增加请求头对于contentType的设置
+                    dataType: 'text',
+                    success: function (data) {
+                        if (data == 'ok'){
+                            $('#result').html("<span class=\"text-info\">执行成功！</span>");
+                        }else if(data == 'false'){
+                            $('#result').html("<span class=\"text-danger\">执行失败！</span>");
+                        }
+                    },
+                    error:function (textStutus) {
+                        $('#result').html(textStutus);
+                    }
+                });
+                e.preventDefault();
+            });
+        });
+    </script>
+{% endblock script %}

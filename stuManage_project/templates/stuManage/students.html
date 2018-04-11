@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>testStudents</title>
+</head>
+<body>
+<h1>Students</h1>
+<ul>
+    {% for stu in stuList %}
+    <li>{{ forloop.counter }}--{{ stu.s_name }}</li>
+        {% empty %}
+        <li>没有学生</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

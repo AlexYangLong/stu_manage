@@ -1,0 +1,23 @@
+body{
+	min-width: 1024px;
+}
+
+/**********************main-right部分*********************/
+.main-right .list-top{
+	margin: 15px 0px;
+	font-size: 16px;
+	border-bottom: 1px solid #6699FF;
+	padding-bottom: 5px;
+}
+.main-right .top-btn{
+	margin-bottom: 15px;
+}
+
+
+/************************stu_add页面***************************/
+.main-right .user-add{
+	margin-top: 15px;
+}
+
+
+

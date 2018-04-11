@@ -1,0 +1,146 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>学生管理系统后台登录</title>
+		<link rel="stylesheet" href="{% static '/stuManage/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static '/stuManage/css/common.css' %}" />
+		<link rel="stylesheet" href="{% static 'stuManage/css/login.css' %}" />
+	</head>
+	<body>
+		<div class="main">
+			<div class="login-box">
+				<h1>学生管理系统</h1>
+				<h2><span>后台登录</span></h2>
+				<form method="post" id="loginValidate">
+                    {% csrf_token %}
+					<div>
+						<input class="form-control" type="text" id="username" name="username" placeholder="请输入账号" />
+					    <div class="tipinfo"></div>
+                    </div>
+					<div>
+						<input class="form-control" type="password" id="password" name="password" placeholder="请输入密码" />
+					    <div class="tipinfo"></div>
+                    </div>
+					<div class="yzm-div">
+						<input class="form-control yzm" type="text" id="verifycode" name="verifycode" placeholder="请输入验证码" />
+{#						<input class="form-control yzmpic" type="text" name="verifycode" placeholder="请输入验证码" />#}
+                        <img id="verifycodeImg" src="{% url 'stuManage:showverify' %}" class="yzmpic" title="点击更换">
+					    <div class="tipinfo"></div>
+                    </div>
+					<div>
+						<span id="result"></span>
+					</div>
+					<div>
+						<a class="btn btn-default form-control" id="btn-login" >登 录</a><!--href="index.html"-->
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<footer class="footer">
+			<div>Copyright © 1999-2018, Alex.NET, All Rights Reserved</div>
+		</footer>
+	</body>
+</html>
+<script type="text/javascript" src="{% static '/stuManage/js/jquery-3.3.1.min.js' %}" ></script>
+<script type="text/javascript" src="{% static '/stuManage/js/jquery.validate.min.js' %}" ></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#verifycodeImg').click(function() {
+            $('#verifycodeImg').attr('src',$('#verifycodeImg').attr('src')+'?'+Math.random())
+        });
+
+        $('#btn-login').click(function (e) {
+            var flag = $("#loginValidate").valid();
+            if(!flag){
+                //没有通过验证
+                return;
+            }
+            var username = $('#username').val().trim();
+            var password = $('#password').val().trim();
+            var verifycode = $('#verifycode').val().trim();
+            var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val()
+
+            $.ajax({
+                url : '{% url 'stuManage:userLogin' %}',
+                data: {'username': username, 'password':password, 'verifycode':verifycode, 'csrfmiddlewaretoken': csrfmiddlewaretoken},
+                type:'POST',
+                dataType:'text',
+                success:function(data){
+                    {#alert(data)#}
+                    if (data == 'ok'){
+                        window.parent.location.href='{% url 'stuManage:index' %}';
+                    }else if(data == 'false'){
+                        $('#result').text('用户名或密码错误');
+                    }else {
+                        $('#result').text(data);
+                    }
+                },
+                error:function (textStutus) {
+                    $('#result').html(textStutus);
+                }
+            });
+            e.preventDefault();
+        });
+
+        $('#loginValidate').validate({
+
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 4,
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                verifycode:{
+                    required: true,
+                    {#minlength: 4,#}
+                    //异步验证 开始
+                    remote: {
+                        url: "{% url 'stuManage:verifyvalidate' %}",//发送请求的url地址
+                        type: "post", //请求方式
+                        dataType: "json",//接收的数据类型
+                        data: {
+                            verifycode: function () {
+                                return $("#verifycode").val();
+                            },
+                            csrfmiddlewaretoken: function () {
+                                return $('[name="csrfmiddlewaretoken"]').val();
+                            }
+                        },
+                        dataFilter: function (data, type) { //过滤返回结果
+                            if (data == "true")
+                                return true;  //true代表用户名还未存在
+                            else
+                              return false; //false代表用户名已经存在
+                        }
+                    }
+                    //异步验证 结束
+                }
+            },
+            messages: {
+                username: {
+                    required: "请输入账户",
+                    minlength: "账户长度不能少于4位",
+                },
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能少于6位"
+                },
+                verifycode: {
+                    required: "请输入验证码",
+                    {#minlength: "验证码长度不能少于4位",#}
+                    remote: "输入的验证码错误"
+                }
+            },
+            // 自定义错误显示位置
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().find(".tipinfo"));
+            }
+        });
+    });
+</script>

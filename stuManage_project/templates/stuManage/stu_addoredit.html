@@ -1,0 +1,167 @@
+{% extends 'stuManage/base.html' %}
+{% load static from staticfiles %}
+
+{% block title %}
+    <title>学生管理-学生信息</title>
+{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'stuManage/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'stuManage/css/common.css' %}" />
+    <link rel="stylesheet" href="{% static 'stuManage/css/student.css' %}" />
+{% endblock css %}
+
+{% block main-right %}
+    <div class="showtime">今天是 2018 年 4 月 7 日 10:27 星期六</div>
+    <div class="list-top">首页 > 学生管理 > 新增学生</div>
+    <div class="top-btn">
+        <button class="btn btn-default" id="btn-golist">返回列表</button>
+        <button class="btn btn-default" id="btn-goimport">批量导入</button>
+        <!--<form class="form-inline pull-right" method="post" action="">
+            <input type="text" class="form-control" />
+            <button class="btn btn-default">搜索</button>
+        </form>-->
+    </div>
+    <div class="user-add">
+        <form class="form-horizontal" method="post" action="">
+            {% csrf_token %}
+            <input type="hidden" id="stu_id">
+            <div class="form-group">
+                <label for="stu_number" class="col-sm-2 col-xs-2 control-label">学号：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_number" name="stu_number" placeholder="请输入学号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_name" class="col-sm-2 col-xs-2 control-label">姓名：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_name" name="stu_name" placeholder="请输入姓名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_gender" class="col-sm-2 col-xs-2 control-label">性别：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <select id="stu_gender" name="stu_gender" class="form-control">
+                        <option value="1" selected="selected">男</option>
+                        <option value="0">女</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_age" class="col-sm-2 col-xs-2 control-label">年龄：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_age" name="stu_age" placeholder="请输入年龄">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_intro" class="col-sm-2 col-xs-2 control-label">介绍：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_intro" name="stu_intro" placeholder="请输入介绍">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_IDnumber" class="col-sm-2 col-xs-2 control-label">身份证号：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_IDnumber" name="stu_IDnumber" placeholder="请输入身份证号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_address" class="col-sm-2 col-xs-2 control-label">住址：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_address" name="stu_address" placeholder="请输入住址">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_phone" class="col-sm-2 col-xs-2 control-label">父母联系电话：</label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <input type="text" class="form-control" id="stu_phone" name="stu_phone" placeholder="请输入父母联系电话">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-xs-2 control-label"></label>
+                <div class="col-sm-5 col-md-5 col-xs-5">
+                    <button class="btn btn-default" id="btn-execute">执 行</button>
+                    <button type="reset" class="btn btn-default">重 置</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="stu_phone" class="col-sm-2 col-xs-2 control-label"></label>
+                <div id="result" class="col-sm-5 col-md-5 col-xs-5">
+
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock main-right %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'stuManage/js/jquery-3.3.1.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'stuManage/js/bootstrap.min.js' %}" ></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#stu_id').val('{{ stu.id }}');
+            $('#stu_number').val('{{ stu.s_number }}');
+            $('#stu_name').val('{{ stu.s_name }}');
+            $('#stu_gender').val('{{ stu.s_gender }}');
+            $('#stu_age').val('{{ stu.s_age }}');
+            $('#stu_intro').val('{{ stu.s_intro }}');
+            $('#stu_IDnumber').val('{{ stu.s_idnumber }}');
+            $('#stu_address').val('{{ stu.s_address }}');
+            $('#stu_phone').val('{{ stu.s_phone }}');
+
+            $('#btn-execute').click(function (e) {
+                var stu_id = $('#stu_id').val();
+               var stu_number = $('#stu_number').val();
+               var stu_name = $('#stu_name').val();
+               var stu_gender = $('#stu_gender').val();
+               var stu_age = $('#stu_age').val();
+               var stu_intro = $('#stu_intro').val();
+               var stu_IDnumber = $('#stu_IDnumber').val();
+               var stu_address = $('#stu_address').val();
+               var stu_phone = $('#stu_phone').val();
+               var csrfmiddlewaretoken = $('[name="csrfmiddlewaretoken"]').val();
+
+                var data = {
+                    'stu_id': stu_id,
+                    'stu_num' : stu_number,
+                    'stu_name' : stu_name,
+                    'stu_gender' : stu_gender,
+                    'stu_age' : stu_age,
+                    'stu_intro' : stu_intro,
+                    'stu_idnum' : stu_IDnumber,
+                    'stu_addr' : stu_address,
+                    'stu_phone' : stu_phone,
+                    'csrfmiddlewaretoken' : csrfmiddlewaretoken,
+                }
+
+                $.ajax({
+                    url : '{% url 'stuManage:addOrEditStu' %}',
+                    data: data,
+                    type:'POST',
+                    dataType:'text',
+                    success:function(data){
+                        {#alert(data)#}
+                        if (data == 'ok'){
+                            $('#result').html("<span class=\"text-info\">执行成功！</span>");
+                        }else if(data == 'false'){
+                            $('#result').html("<span class=\"text-danger\">执行失败！</span>");
+                        }
+                    },
+                    error:function (textStutus) {
+                        $('#result').html(textStutus);
+                    }
+                });
+               e.preventDefault();
+            });
+
+            $('#btn-golist').click(function (e) {
+               window.parent.location.href = "{% url 'stuManage:students' 1 %}";
+               e.preventDefault();
+            });
+
+            $('#btn-goimport').click(function (e) {
+               window.parent.location.href = "{% url 'stuManage:importstu' %}";
+               e.preventDefault();
+            });
+        });
+    </script>
+{% endblock script %}
